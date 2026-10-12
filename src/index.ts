@@ -1,6 +1,6 @@
 import yargs from "yargs"
 import { hideBin } from "yargs/helpers"
-import { adicionar, concluir, listar } from "./tarefas"
+import { adicionar, concluir, listar, remover } from "./tarefas"
 
 const posicionalId = {
   describe: "Identificador da tarefa",
@@ -67,14 +67,18 @@ yargs(hideBin(process.argv))
     async ({ id }) => {
       await concluir(id)
 
-      console.log(`Tarefa #${id} concluida com sucesso`)
+      console.log(`Tarefa #${id} concluida`)
     }
   )
   .command(
     "remover <id>",
     "Remove uma tarefa",
     (y) => y.positional("id", posicionalId),
-    (_argv) => {}
+    async ({ id }) => {
+      await remover(id)
+
+      console.log(`Tarefa #${id} removida`)
+    }
   )
   .command(
     "editar <id> <descricao>",

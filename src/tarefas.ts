@@ -13,6 +13,16 @@ export class TarefaNaoEncontradaError extends Error {
   }
 }
 
+function buscar(tarefas: Tarefa[], id: number): number {
+  const index = tarefas.findIndex((tarefa) => tarefa.id === id)
+
+  if (index < 0) {
+    throw new TarefaNaoEncontradaError(id)
+  }
+
+  return index
+}
+
 function proximoId(tarefas: Tarefa[]): number {
   if (tarefas.length > 0) {
     return Math.max(...tarefas.map((tarefa) => tarefa.id)) + 1
@@ -43,13 +53,19 @@ export async function listar(): Promise<Tarefa[]> {
 export async function concluir(id: number): Promise<void> {
   const tarefas = await carregar()
 
-  const index = tarefas.findIndex((tarefa) => tarefa.id === id)
-
-  if (index < 0) {
-    throw new TarefaNaoEncontradaError(id)
-  }
+  const index = buscar(tarefas, id)
 
   tarefas[index]!.concluida = true
+
+  await salvar(tarefas)
+}
+
+export async function remover(id: number): Promise<void> {
+  const tarefas = await carregar()
+
+  const index = buscar(tarefas, id)
+
+  tarefas.splice(index, 1)
 
   await salvar(tarefas)
 }

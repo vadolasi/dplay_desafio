@@ -1,10 +1,6 @@
-const arquivo = Bun.file("./tarefas.json")
+import type { Tarefa } from "./tarefas"
 
-type Tarefa = {
-  id: number
-  descrição: string
-  concluida: boolean
-}
+const arquivo = Bun.file("./tarefas.json")
 
 export async function carregar(): Promise<Tarefa[]> {
   return await arquivo.json()

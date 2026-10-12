@@ -1,6 +1,6 @@
 import yargs from "yargs"
 import { hideBin } from "yargs/helpers"
-import { adicionar, concluir, listar, remover } from "./tarefas"
+import { adicionar, concluir, editar, listar, remover } from "./tarefas"
 
 const posicionalId = {
   describe: "Identificador da tarefa",
@@ -89,7 +89,11 @@ yargs(hideBin(process.argv))
         type: "string",
         demandOption: true
       }),
-    (_argv) => {}
+    async ({ id, descricao }) => {
+      await editar(id, descricao)
+
+      console.log(`Tarefa #${id} editada`)
+    }
   )
 
   .demandCommand(1, "Comando inválido")

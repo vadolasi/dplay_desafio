@@ -69,3 +69,13 @@ export async function remover(id: number): Promise<void> {
 
   await salvar(tarefas)
 }
+
+export async function editar(id: number, descrição: string): Promise<void> {
+  const tarefas = await carregar()
+
+  const index = buscar(tarefas, id)
+
+  tarefas[index]!.descrição = descrição
+
+  await salvar(tarefas)
+}

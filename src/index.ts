@@ -45,9 +45,13 @@ yargs(hideBin(process.argv))
   .command(
     "listar",
     "Lista todas as tarefas",
-    () => {},
-    async () => {
-      const tarefas = await listar()
+    (y) =>
+      y.option("status", {
+        describe: "Mostra só as tarefas com esse status",
+        choices: ["pendente", "concluida"] as const
+      }),
+    async ({ status }) => {
+      const tarefas = await listar(status)
 
       if (tarefas.length > 0) {
         for (const tarefa of tarefas) {
@@ -55,6 +59,8 @@ yargs(hideBin(process.argv))
             `[${tarefa.concluida ? "X" : " "}] #${tarefa.id}  ${tarefa.descrição}            ${new Date(tarefa.dataCriação).toLocaleDateString("pt-BR")}`
           )
         }
+      } else if (status) {
+        console.log("Nenhuma tarefa com esse status")
       } else {
         console.log("Nenhuma tarefa cadastrada")
       }

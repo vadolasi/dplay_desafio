@@ -7,6 +7,8 @@ export type Tarefa = {
   dataCriação: string
 }
 
+export type Status = "pendente" | "concluida"
+
 export class TarefaNaoEncontradaError extends Error {
   constructor(id: number) {
     super(`Tarefa #${id} não encontrada`)
@@ -46,8 +48,18 @@ export async function adicionar(descrição: string): Promise<Tarefa> {
   return tarefa
 }
 
-export async function listar(): Promise<Tarefa[]> {
-  return await carregar()
+export async function listar(status?: Status): Promise<Tarefa[]> {
+  const tarefas = await carregar()
+
+  if (status === "pendente") {
+    return tarefas.filter((tarefa) => !tarefa.concluida)
+  }
+
+  if (status === "concluida") {
+    return tarefas.filter((tarefa) => tarefa.concluida)
+  }
+
+  return tarefas
 }
 
 export async function concluir(id: number): Promise<void> {

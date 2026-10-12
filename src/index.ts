@@ -4,6 +4,7 @@ import { hideBin } from "yargs/helpers"
 yargs(hideBin(process.argv))
   .scriptName("tarefas")
   .usage("$0 <comando> [opções]")
+  .locale("pt_BR")
 
   // Comando de ajuda automático
   .help("ajuda")

@@ -2,6 +2,18 @@ import yargs from "yargs"
 import { hideBin } from "yargs/helpers"
 import { adicionar, concluir, listar } from "./tarefas"
 
+const posicionalId = {
+  describe: "Identificador da tarefa",
+  type: "number",
+  demandOption: true,
+  coerce: (id: number) => {
+    if (!Number.isInteger(id)) {
+      throw new Error("O id deve ser um número inteiro")
+    }
+    return id
+  }
+} as const
+
 yargs(hideBin(process.argv))
   .scriptName("tarefas")
   .usage("$0 <comando> [opções]")
@@ -51,12 +63,7 @@ yargs(hideBin(process.argv))
   .command(
     "concluir <id>",
     "Marca uma tarefa como concluida",
-    (y) =>
-      y.positional("id", {
-        describe: "Identificador da tarefa",
-        type: "number",
-        demandOption: true
-      }),
+    (y) => y.positional("id", posicionalId),
     async ({ id }) => {
       await concluir(id)
 
@@ -66,29 +73,18 @@ yargs(hideBin(process.argv))
   .command(
     "remover <id>",
     "Remove uma tarefa",
-    (y) =>
-      y.positional("id", {
-        describe: "Identificador da tarefa",
-        type: "number",
-        demandOption: true
-      }),
+    (y) => y.positional("id", posicionalId),
     (_argv) => {}
   )
   .command(
     "editar <id> <descricao>",
     "Edita a descrição de uma tarefa",
     (y) =>
-      y
-        .positional("id", {
-          describe: "Identificador da tarefa",
-          type: "number",
-          demandOption: true
-        })
-        .positional("descricao", {
-          describe: "Nova descrição da tarefa",
-          type: "string",
-          demandOption: true
-        }),
+      y.positional("id", posicionalId).positional("descricao", {
+        describe: "Nova descrição da tarefa",
+        type: "string",
+        demandOption: true
+      }),
     (_argv) => {}
   )
 

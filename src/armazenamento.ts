@@ -3,7 +3,11 @@ import type { Tarefa } from "./tarefas"
 const arquivo = Bun.file("./tarefas.json")
 
 export async function carregar(): Promise<Tarefa[]> {
-  return await arquivo.json()
+  if (await arquivo.exists()) {
+    return await arquivo.json()
+  }
+
+  return []
 }
 
 export async function salvar(tarefas: Tarefa[]): Promise<void> {

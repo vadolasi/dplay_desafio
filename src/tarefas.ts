@@ -7,6 +7,12 @@ export type Tarefa = {
   dataCriação: string
 }
 
+export class TarefaNaoEncontradaError extends Error {
+  constructor(id: number) {
+    super(`Tarefa #${id} não encontrada`)
+  }
+}
+
 function proximoId(tarefas: Tarefa[]): number {
   if (tarefas.length > 0) {
     return Math.max(...tarefas.map((tarefa) => tarefa.id)) + 1
@@ -32,4 +38,18 @@ export async function adicionar(descrição: string): Promise<Tarefa> {
 
 export async function listar(): Promise<Tarefa[]> {
   return await carregar()
+}
+
+export async function concluir(id: number): Promise<void> {
+  const tarefas = await carregar()
+
+  const index = tarefas.findIndex((tarefa) => tarefa.id === id)
+
+  if (index < 0) {
+    throw new TarefaNaoEncontradaError(id)
+  }
+
+  tarefas[index]!.concluida = true
+
+  await salvar(tarefas)
 }

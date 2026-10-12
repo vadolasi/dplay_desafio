@@ -4,7 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "bun run src/index.ts",
+    "tarefas": "bun run src/index.ts",
     "format": "bunx biome check --write",
     "postinstall": "lefthook install"
   },

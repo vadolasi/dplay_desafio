@@ -1,5 +1,6 @@
 import yargs from "yargs"
 import { hideBin } from "yargs/helpers"
+import { adicionar, listar } from "./tarefas"
 
 yargs(hideBin(process.argv))
   .scriptName("tarefas")
@@ -23,13 +24,29 @@ yargs(hideBin(process.argv))
         type: "string",
         demandOption: true
       }),
-    (_argv) => {}
+    async (argv) => {
+      const tarefa = await adicionar(argv.descricao)
+
+      console.log(`Tarefa #${tarefa.id} adicionada`)
+    }
   )
   .command(
     "listar",
     "Lista todas as tarefas",
     () => {},
-    (_argv) => {}
+    async (_argv) => {
+      const tarefas = await listar()
+
+      if (tarefas.length > 0) {
+        for (const tarefa of tarefas) {
+          console.log(
+            `[${tarefa.concluida ? "X" : " "}] ${tarefa.descrição}            ${new Date(tarefa.dataCriação).toLocaleDateString("pt-BR")}`
+          )
+        }
+      } else {
+        console.log("Nehuma tarefa cadastrada")
+      }
+    }
   )
   .command(
     "remover <id>",

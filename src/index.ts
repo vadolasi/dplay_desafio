@@ -1,5 +1,6 @@
 import yargs from "yargs"
 import { hideBin } from "yargs/helpers"
+import ptBR from "../node_modules/yargs/locales/pt_BR.json"
 import { adicionar, concluir, editar, listar, remover } from "./tarefas"
 
 const posicionalId = {
@@ -18,6 +19,9 @@ yargs(hideBin(process.argv))
   .scriptName("tarefas")
   .usage("$0 <comando> [opções]")
   .locale("pt_BR")
+  // O executável compilado não leva os arquivos de tradução do yargs, então as
+  // mensagens em português são embutidas pela importação do pt_BR.json.
+  .updateLocale(ptBR as unknown as Record<string, string>)
 
   // Comando de ajuda automático
   .help("ajuda")
